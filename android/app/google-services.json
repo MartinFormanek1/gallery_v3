@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "212935807881",
+    "project_id": "gallery-v3-3c819",
+    "storage_bucket": "gallery-v3-3c819.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:212935807881:android:7fb72d3de89f28529f4758",
+        "android_client_info": {
+          "package_name": "helmanz.co.gallery_v3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "212935807881-do7s9hfhqabina5j35cl0a00jk3pabbj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "helmanz.co.gallery_v3",
+            "certificate_hash": "183cae5f162d8776c592dbf684144d1240a3722d"
+          }
+        },
+        {
+          "client_id": "212935807881-kqo5dgmibr5jgs985c8c07586ae0grnb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAW6Lp6yqdFAJ54GdIZ-jSyq34QjiT5hME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "212935807881-kqo5dgmibr5jgs985c8c07586ae0grnb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
