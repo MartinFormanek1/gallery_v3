@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:gallery_v3/components/filters.dart';
+import 'package:gallery_v3/providers/my_filter_provider.dart';
 
 class MyImageFilters extends StatefulWidget {
   static const routeName = '/myImageFilters';
@@ -14,13 +14,6 @@ class MyImageFilters extends StatefulWidget {
       );
 
   File image;
-  final List<List<double>> filters = [
-    NO_FILTER,
-    GRAYSCALE,
-    SEPIUM,
-    OLD_TIMES,
-    MILK
-  ];
 
   MyImageFilters({Key key, this.image}) : super(key: key);
   final GlobalKey _globalKey = GlobalKey();
@@ -60,10 +53,11 @@ class _MyImageFiltersState extends State<MyImageFilters> {
               child: PageView.builder(
                   controller: _pageControler,
                   scrollDirection: Axis.horizontal,
-                  itemCount: widget.filters.length,
+                  itemCount: MyFilterProvider.instance.filters.length,
                   itemBuilder: (context, index) {
                     return ColorFiltered(
-                      colorFilter: ColorFilter.matrix(widget.filters[index]),
+                      colorFilter: ColorFilter.matrix(
+                          MyFilterProvider.instance.filters[index]),
                       child: Image.file(widget.image),
                     );
                   }),
@@ -74,12 +68,13 @@ class _MyImageFiltersState extends State<MyImageFilters> {
           height: 100,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: widget.filters.length,
+            itemCount: MyFilterProvider.instance.filters.length,
             itemBuilder: (context, index) {
               return Container(
                 margin: EdgeInsets.all(2.0),
                 child: ColorFiltered(
-                  colorFilter: ColorFilter.matrix(widget.filters[index]),
+                  colorFilter: ColorFilter.matrix(
+                      MyFilterProvider.instance.filters[index]),
                   child: GestureDetector(
                     onTap: () {
                       int i = 0;

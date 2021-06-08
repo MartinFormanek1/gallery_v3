@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:gallery_v3/screens/image_picker/my_image_filters.dart';
+import 'package:gallery_v3/dropped/my_image_filters.dart';
 import 'package:gallery_v3/shared/colors.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
@@ -29,6 +29,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
   File _image;
   final picker = ImagePicker();
   final FirebaseFirestore fb = FirebaseFirestore.instance;
+
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   firebase_storage.Reference ref =

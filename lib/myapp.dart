@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_v3/dropped/my_image_filters.dart';
+import 'package:gallery_v3/screens/edit_image_crop.dart';
+import 'package:gallery_v3/screens/edit_image_filter.dart';
 import 'package:gallery_v3/screens/edit_image_screen.dart';
 import 'package:gallery_v3/screens/error/error.dart';
-import 'package:gallery_v3/screens/image_picker/my_image_filters.dart';
 import 'package:gallery_v3/screens/image_picker/my_image_picker.dart';
 import 'package:gallery_v3/screens/log_reg/authentication.dart';
 import 'package:gallery_v3/screens/log_reg/login/login.dart';
@@ -45,6 +47,8 @@ class _MyAppState extends State<MyApp> {
                     MyProfile.routeName: (context) => MyProfile(),
                     MyImageFilters.routeName: (context) => MyImageFilters(),
                     EditImageScreen.routeName: (context) => EditImageScreen(),
+                    MyImageFilter.routeName: (context) => MyImageFilter(),
+                    MyImageCrop.routeName: (context) => MyImageCrop(),
                   },
                   theme: ThemeData(
                     appBarTheme: const AppBarTheme(

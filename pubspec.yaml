@@ -39,6 +39,7 @@ dependencies:
   scrollable_positioned_list: ^0.1.10
   event: ^2.0.1
   path_provider: ^2.0.1
+  image_crop: ^0.4.0
 
 flutter_icons:
   image_path: "assets/icon/icon.png"

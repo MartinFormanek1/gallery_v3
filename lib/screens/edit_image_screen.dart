@@ -1,10 +1,8 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:gallery_v3/components/edit_image_dial.dart';
-import 'package:gallery_v3/components/edit_image_filters.dart';
+import 'package:gallery_v3/providers/my_image_provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditImageScreen extends StatefulWidget {
@@ -19,22 +17,11 @@ class EditImageScreen extends StatefulWidget {
 }
 
 class _EditImageScreenState extends State<EditImageScreen> {
-  _EditImageScreenState() {
-    _title = 'Pick your image';
-    generateScafBody();
-  }
-
-  // Variables
-  String _title = "";
-  File _image;
-  Widget scafBody;
-  bool editing = false;
-
-  final FirebaseFirestore fb = FirebaseFirestore.instance;
-  firebase_storage.FirebaseStorage storage =
-      firebase_storage.FirebaseStorage.instance;
-  firebase_storage.Reference ref =
-      firebase_storage.FirebaseStorage.instance.ref('images');
+  // final FirebaseFirestore fb = FirebaseFirestore.instance;
+  // firebase_storage.FirebaseStorage storage =
+  //     firebase_storage.FirebaseStorage.instance;
+  // firebase_storage.Reference ref =
+  //     firebase_storage.FirebaseStorage.instance.ref('images');
 
   // Getting image.
   Future getImage() async {
@@ -43,54 +30,45 @@ class _EditImageScreenState extends State<EditImageScreen> {
 
     setState(() {
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
-        _title = 'Edit your image';
+        MyImageProvider.instance.image = File(pickedFile.path);
+        MyImageProvider.instance.orgImage = File(pickedFile.path);
       }
     });
   }
 
-  selectFilters() {
-    setState(() {
-      _title = 'Select your filter';
-      generateScafBody(body: ImageFilter(_image));
-      editing = true;
-    });
-  }
-
-  generateScafBody({Widget body}) {
-    if (body == null) {
-      scafBody = GestureDetector(
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text((MyImageProvider.instance.image == null)
+            ? 'Pick your image'
+            : 'Your image'),
+        actions: [
+          TextButton(
+              onPressed: () {
+                setState(() {});
+              },
+              child: Text('reset'))
+        ],
+      ),
+      body: GestureDetector(
           onTap: () => getImage(),
           child: SizedBox.expand(
             child: Container(
                 child: FittedBox(
-              child: _image == null
+              child: MyImageProvider.instance.image == null
                   ? Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text('Tap to select \n your image.'),
                     )
-                  : Image.file(_image),
+                  : Image.file(MyImageProvider.instance.image),
             )),
-          ));
-    } else {
-      scafBody = body;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (scafBody == null) {
-      generateScafBody();
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_title),
-      ),
-      body: scafBody,
-      floatingActionButton: (_image == null) ? null : EditDial(selectFilters),
+          )),
+      floatingActionButton: MyImageProvider.instance.image == null
+          ? null
+          : EditDial(function: () {
+              setState(() {});
+            }),
     );
   }
 }
-
-enum States { pick, edit, tag, send }
