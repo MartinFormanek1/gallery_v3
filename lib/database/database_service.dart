@@ -35,8 +35,8 @@ class DatabaseService {
         .listAll();
 
     for (var item in result.items) {
-      final durl = await item.getDownloadURL();
-      images.add(durl);
+      final dUrl = await item.getDownloadURL();
+      images.add(dUrl);
     }
 
     return images;

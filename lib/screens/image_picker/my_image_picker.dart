@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:gallery_v3/dropped/my_image_filters.dart';
+import 'package:gallery_v3/screens/edit_image_filter.dart';
 import 'package:gallery_v3/shared/colors.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
@@ -85,10 +85,8 @@ class _MyImagePickerState extends State<MyImagePicker> {
             backgroundColor: ColorPallete.floatingActionButtonColor,
             onTap: () => (_image == null)
                 ? null
-                : Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MyImageFilters(
-                          image: _image,
-                        ))),
+                : Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => MyImageFilter())),
             label: 'Edit Image',
             labelStyle: TextStyle(
               fontWeight: FontWeight.w500,

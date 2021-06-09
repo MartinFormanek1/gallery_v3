@@ -65,6 +65,7 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
+      //body: Column(),
       body: Container(
         padding: EdgeInsets.fromLTRB(8, 24, 8, 0),
         child: Center(
