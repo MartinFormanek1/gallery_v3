@@ -22,7 +22,7 @@ class UserAuth {
       await DatabaseService(uid: user.uid).updateUserData(username);
       return _userFromFBUser(user);
     } catch (e) {
-      print("Error + " + e);
+      print("Error + " + e.toString());
       return null;
     }
   }

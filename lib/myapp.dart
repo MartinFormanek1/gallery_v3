@@ -13,7 +13,7 @@ import 'package:gallery_v3/screens/user_follows/user_follows.dart';
 import 'package:gallery_v3/screens/user_gallery/user_gallery.dart';
 import 'package:gallery_v3/screens/user_profile/user_profile.dart';
 import 'package:gallery_v3/screens/user_saved/user_saved.dart';
-import 'package:gallery_v3/shared/colors.dart';
+import 'package:gallery_v3/themes/custom_themes.dart';
 import 'package:gallery_v3/wrapper.dart';
 import 'package:provider/provider.dart';
 
@@ -35,31 +35,18 @@ class _MyAppState extends State<MyApp> {
           }
           if (snapshot.connectionState == ConnectionState.done) {
             return MultiProvider(
-              child: MaterialApp(
-                  routes: {
-                    Login.routeName: (context) => Login(),
-                    Register.routeName: (context) => Register(),
-                    MyImagePicker.routeName: (context) => MyImagePicker(),
-                    MyGallery.routeName: (context) => MyGallery(),
-                    MySaved.routeName: (context) => MySaved(),
-                    MyFollows.routeName: (context) => MyFollows(),
-                    MyProfile.routeName: (context) => MyProfile(),
-                    EditImageScreen.routeName: (context) => EditImageScreen(),
-                    MyImageFilter.routeName: (context) => MyImageFilter(),
-                    MyImageCrop.routeName: (context) => MyImageCrop(),
-                  },
-                  theme: ThemeData(
-                    appBarTheme: const AppBarTheme(
-                      color: ColorPallete.appbarColor,
-                    ),
-                    scaffoldBackgroundColor:
-                        ColorPallete.scaffoldBackgroundColor,
-                    floatingActionButtonTheme:
-                        const FloatingActionButtonThemeData(
-                      backgroundColor: ColorPallete.floatingActionButtonColor,
-                    ),
-                  ),
-                  home: Wrapper()),
+              child: MaterialApp(routes: {
+                Login.routeName: (context) => Login(),
+                Register.routeName: (context) => Register(),
+                MyImagePicker.routeName: (context) => MyImagePicker(),
+                MyGallery.routeName: (context) => MyGallery(),
+                MySaved.routeName: (context) => MySaved(),
+                MyFollows.routeName: (context) => MyFollows(),
+                MyProfile.routeName: (context) => MyProfile(),
+                EditImageScreen.routeName: (context) => EditImageScreen(),
+                MyImageFilter.routeName: (context) => MyImageFilter(),
+                MyImageCrop.routeName: (context) => MyImageCrop(),
+              }, theme: CustomTheme.currentTheme, home: Wrapper()),
               providers: [
                 StreamProvider<GalleryUser>.value(value: UserAuth().user)
               ],

@@ -8,6 +8,8 @@ import 'package:gallery_v3/database/database_service.dart';
 import 'package:gallery_v3/screens/edit_image_screen.dart';
 import 'package:gallery_v3/screens/error/error.dart';
 import 'package:gallery_v3/screens/log_reg/authentication.dart';
+import 'package:gallery_v3/shared/colors.dart';
+import 'package:gallery_v3/themes/custom_themes.dart';
 import 'package:page_transition/page_transition.dart';
 
 class Home extends StatefulWidget {
@@ -34,7 +36,7 @@ class _HomeState extends State<Home> {
     }
   }
 
-  Future load() {
+  load() {
     if (mounted) {
       fillList();
     }
@@ -56,7 +58,9 @@ class _HomeState extends State<Home> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        elevation: 0,
+        toolbarHeight: 70.0,
+        shadowColor: Colors.black,
+        elevation: 10,
         title: Text('Gallery'),
         actions: <Widget>[
           IconButton(
@@ -82,14 +86,18 @@ class _HomeState extends State<Home> {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Card(
-                          color: Colors.brown,
+                          shadowColor:
+                              CustomTheme.getTheme ? Colors.grey : null,
+                          elevation: 10,
+                          color: ColorPallete.vermillion,
                           shape:
                               Border(bottom: BorderSide(color: Colors.brown)),
                           child: Column(
                             children: [
                               Image.network(images[index]),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 12),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -98,7 +106,7 @@ class _HomeState extends State<Home> {
                                     Text("Posted by ####"),
                                   ],
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -117,11 +125,8 @@ class _HomeState extends State<Home> {
             PageTransition(
                 child: EditImageScreen(), type: PageTransitionType.fade)),
         child: Icon(Icons.add),
-        backgroundColor: Colors.brown,
       ),
       endDrawer: SideSheet(),
     );
-    /*,
-    );*/
   }
 }
