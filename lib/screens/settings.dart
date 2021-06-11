@@ -25,7 +25,7 @@ class _MySettingsState extends State<MySettings> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: CustomTheme.currentTheme.scaffoldBackgroundColor,
-      appBar: customAppBar(
+      appBar: CustomAppBar(
         scaffoldKey: null,
         title: 'Settings',
         isBackArrow: true,

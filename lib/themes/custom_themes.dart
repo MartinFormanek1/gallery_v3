@@ -12,7 +12,7 @@ class CustomTheme {
     prefs.setBool('lightTheme', _isLight);
   }
 
-  static void set onInitApp(bool isLight) {
+  static set onInitApp(bool isLight) {
     _isLight = isLight;
   }
 

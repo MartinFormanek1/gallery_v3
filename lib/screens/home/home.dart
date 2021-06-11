@@ -6,9 +6,8 @@ import 'package:gallery_v3/components/likebtn.dart';
 import 'package:gallery_v3/components/loading.dart';
 import 'package:gallery_v3/components/side_menu.dart';
 import 'package:gallery_v3/database/database_service.dart';
-import 'package:gallery_v3/screens/edit_image_screen.dart';
 import 'package:gallery_v3/screens/error/error.dart';
-import 'package:gallery_v3/screens/log_reg/authentication.dart';
+import 'package:gallery_v3/screens/upload_image_screen.dart';
 import 'package:gallery_v3/styles/colors.dart';
 import 'package:gallery_v3/themes/custom_themes.dart';
 import 'package:page_transition/page_transition.dart';
@@ -48,7 +47,7 @@ class _HomeState extends State<Home> {
     return db.getImageUser(img);
   }
 
-  final UserAuth _auth = UserAuth();
+  //final UserAuth _auth = UserAuth();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -56,7 +55,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: CustomTheme.currentTheme.scaffoldBackgroundColor,
       key: _scaffoldKey,
-      appBar: customAppBar(
+      appBar: CustomAppBar(
         scaffoldKey: _scaffoldKey,
         title: 'Gallery',
         isBackArrow: false,
@@ -110,7 +109,7 @@ class _HomeState extends State<Home> {
         onPressed: () => Navigator.push(
             context,
             PageTransition(
-                child: EditImageScreen(), type: PageTransitionType.fade)),
+                child: UploadImageScreen(), type: PageTransitionType.fade)),
         child: Icon(Icons.add),
       ),
       endDrawer: SideSheet(),

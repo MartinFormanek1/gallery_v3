@@ -64,6 +64,17 @@ class _SideSheetState extends State<SideSheet> {
                             alignment: Alignment.centerLeft,
                             route: () =>
                                 Navigator.of(context).push(MyProfile.route),
+                            icon: Icon(Icons.search),
+                            label: 'Search',
+                            color: CustomTheme.reverseTextColor,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          SideButton(
+                            alignment: Alignment.centerLeft,
+                            route: () =>
+                                Navigator.of(context).push(MyProfile.route),
                             icon: Icon(Icons.person),
                             label: 'Visit Profile',
                             color: CustomTheme.reverseTextColor,

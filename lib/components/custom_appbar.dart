@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gallery_v3/styles/colors.dart';
 import 'package:gallery_v3/themes/custom_themes.dart';
 
-class customAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const customAppBar({Key key, this.scaffoldKey, this.title, this.isBackArrow})
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const CustomAppBar({Key key, this.scaffoldKey, this.title, this.isBackArrow})
       : super(key: key);
 
   final GlobalKey<ScaffoldState> scaffoldKey;

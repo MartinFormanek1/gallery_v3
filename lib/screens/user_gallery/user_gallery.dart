@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gallery_v3/screens/home/home.dart';
 
 class MyGallery extends StatefulWidget {
   static const routeName = '/myGallery';
@@ -18,9 +17,6 @@ class _MyGalleryState extends State<MyGallery> {
     return Scaffold(
       appBar: AppBar(
         title: Text('My Gallery'),
-      ),
-      body: RaisedButton(
-        onPressed: () => Navigator.of(context).pushReplacement(Home.route),
       ),
     );
   }

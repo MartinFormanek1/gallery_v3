@@ -6,11 +6,20 @@ class DatabaseService {
   final String uid;
   DatabaseService({this.uid});
 
-  final CollectionReference userCollection =
+  final CollectionReference users =
+      FirebaseFirestore.instance.collection('users');
+
+  final CollectionReference images =
+      FirebaseFirestore.instance.collection('users');
+
+  final CollectionReference usersLikes =
+      FirebaseFirestore.instance.collection('users');
+
+  final CollectionReference imagesTags =
       FirebaseFirestore.instance.collection('users');
 
   Future updateUserData(String name) async {
-    return await userCollection.doc(uid).set({
+    return await users.doc(uid).set({
       'name': name,
     });
   }
@@ -23,8 +32,8 @@ class DatabaseService {
     }).toList();
   }
 
-  Stream<List<GalleryUser>> get users {
-    return userCollection.snapshots().map(_userList);
+  Stream<List<GalleryUser>> get userList {
+    return users.snapshots().map(_userList);
   }
 
   Future<List> getImages(List images) async {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gallery_v3/screens/home/home.dart';
 
 class MySaved extends StatefulWidget {
   static const routeName = '/mySaved';
@@ -18,9 +17,6 @@ class _MySavedState extends State<MySaved> {
     return Scaffold(
       appBar: AppBar(
         title: Text('My Saved'),
-      ),
-      body: RaisedButton(
-        onPressed: () => Navigator.of(context).pushReplacement(Home.route),
       ),
     );
   }

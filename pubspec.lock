@@ -303,13 +303,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.19"
-  image_crop:
-    dependency: "direct main"
-    description:
-      name: image_crop
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.0"
   image_picker:
     dependency: "direct main"
     description:
@@ -457,13 +450,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
-  scrollable_positioned_list:
-    dependency: "direct main"
-    description:
-      name: scrollable_positioned_list
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.10"
   shared_preferences:
     dependency: "direct main"
     description:
