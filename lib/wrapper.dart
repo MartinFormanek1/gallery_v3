@@ -10,7 +10,7 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<GalleryUser>(context);
     if (user == null) {
-      return Login();
+      return MyLogin();
     } else {
       return Home();
     }

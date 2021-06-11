@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:gallery_v3/screens/edit_image_filter.dart';
-import 'package:gallery_v3/shared/colors.dart';
+import 'package:gallery_v3/styles/colors.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 

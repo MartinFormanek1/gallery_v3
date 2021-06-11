@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gallery_v3/shared/colors.dart';
+import 'package:gallery_v3/styles/colors.dart';
 
 class IconFavButton extends StatefulWidget {
   @override

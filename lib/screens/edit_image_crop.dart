@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gallery_v3/providers/my_image_provider.dart';
 import 'package:image_crop/image_crop.dart';
+import 'package:path_provider/path_provider.dart';
 
 class MyImageCrop extends StatefulWidget {
   const MyImageCrop({Key key}) : super(key: key);
@@ -27,6 +28,8 @@ class _MyImageCropState extends State<MyImageCrop> {
     super.initState();
     _sample = MyImageProvider.instance.image;
     _file = MyImageProvider.instance.image;
+    print(MyImageProvider.instance.image);
+    //_openImage();
   }
 
   @override
@@ -100,8 +103,8 @@ class _MyImageCropState extends State<MyImageCrop> {
       preferredSize: context.size.longestSide.ceil(),
     );
 
-    _sample?.delete();
-    _file?.delete();
+    //_sample?.delete();
+    //_file?.delete();
 
     setState(() {
       _sample = sample;
@@ -134,6 +137,20 @@ class _MyImageCropState extends State<MyImageCrop> {
     _lastCropped?.delete();
     _lastCropped = file;
 
-    debugPrint('$file');
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appDocPath = appDocDir.path + "/";
+
+    _lastCropped = await moveFile(_lastCropped, appDocPath);
+
+    MyImageProvider.instance.image = _lastCropped;
+
+    Navigator.of(context).pop();
+  }
+
+  Future<File> moveFile(File sourceFile, String newPath) async {
+    final newFile =
+        await sourceFile.copy(newPath + sourceFile.path.substring(41));
+    await sourceFile?.delete();
+    return newFile;
   }
 }

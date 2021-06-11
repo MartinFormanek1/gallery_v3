@@ -14,11 +14,15 @@ class UserAuth {
   }
 
   Future<GalleryUser> registerWithEmailPassword(
-      String email, String password, String username) async {
+    String email,
+    String password,
+    String username,
+  ) async {
     try {
       final UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
+
       await DatabaseService(uid: user.uid).updateUserData(username);
       return _userFromFBUser(user);
     } catch (e) {

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gallery_v3/components/custom_appbar.dart';
 import 'package:gallery_v3/components/likebtn.dart';
 import 'package:gallery_v3/components/loading.dart';
 import 'package:gallery_v3/components/side_menu.dart';
@@ -8,13 +9,14 @@ import 'package:gallery_v3/database/database_service.dart';
 import 'package:gallery_v3/screens/edit_image_screen.dart';
 import 'package:gallery_v3/screens/error/error.dart';
 import 'package:gallery_v3/screens/log_reg/authentication.dart';
-import 'package:gallery_v3/shared/colors.dart';
+import 'package:gallery_v3/styles/colors.dart';
 import 'package:gallery_v3/themes/custom_themes.dart';
 import 'package:page_transition/page_transition.dart';
 
 class Home extends StatefulWidget {
   const Home({Key key}) : super(key: key);
 
+  static const routeName = '/myHome';
   static MaterialPageRoute get route => MaterialPageRoute(
         builder: (context) => const Home(),
       );
@@ -49,37 +51,24 @@ class _HomeState extends State<Home> {
   final UserAuth _auth = UserAuth();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  void _openEndDrawer() {
-    _scaffoldKey.currentState.openEndDrawer();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CustomTheme.currentTheme.scaffoldBackgroundColor,
       key: _scaffoldKey,
-      appBar: AppBar(
-        toolbarHeight: 70.0,
-        shadowColor: Colors.black,
-        elevation: 10,
-        title: Text('Gallery'),
-        actions: <Widget>[
-          IconButton(
-            onPressed: _openEndDrawer,
-            icon: Icon(Icons.menu),
-          ),
-        ],
+      appBar: customAppBar(
+        scaffoldKey: _scaffoldKey,
+        title: 'Gallery',
+        isBackArrow: false,
       ),
-      //body: Column(),
       body: Container(
         padding: EdgeInsets.fromLTRB(8, 24, 8, 0),
         child: Center(
           child: FutureBuilder(
             future: load(),
             builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return ErrorFirebase();
-              }
-              if (images.isNotEmpty) {
+              if (snapshot.hasError) return ErrorFirebase();
+              if (images.isNotEmpty)
                 return ListView.builder(
                     itemCount: images.length,
                     itemBuilder: (BuildContext ctx, int index) {
@@ -90,8 +79,6 @@ class _HomeState extends State<Home> {
                               CustomTheme.getTheme ? Colors.grey : null,
                           elevation: 10,
                           color: ColorPallete.vermillion,
-                          shape:
-                              Border(bottom: BorderSide(color: Colors.brown)),
                           child: Column(
                             children: [
                               Image.network(images[index]),
@@ -112,7 +99,6 @@ class _HomeState extends State<Home> {
                         ),
                       );
                     });
-              }
               return Loading();
             },
           ),
@@ -120,6 +106,7 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       floatingActionButton: FloatingActionButton(
+        backgroundColor: ColorPallete.vermillion,
         onPressed: () => Navigator.push(
             context,
             PageTransition(

@@ -1,16 +1,19 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_v3/screens/home/home.dart';
 import 'package:gallery_v3/screens/log_reg/login/login.dart';
+import 'package:gallery_v3/styles/colors.dart';
+import 'package:gallery_v3/themes/custom_themes.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../authentication.dart';
 
-class Register extends StatefulWidget {
+class MyRegister extends StatefulWidget {
   final Function toggleView;
-  Register({this.toggleView});
+  MyRegister({this.toggleView});
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _MyRegisterState createState() => _MyRegisterState();
   static const routeName = '/register';
 }
 
@@ -22,11 +25,12 @@ bool isBtnDisabled = true;
 final UserAuth _auth = UserAuth();
 
 String email = '';
+String emailValid = '';
 String password = '';
 String error = '';
 String username = '';
 
-class _RegisterState extends State<Register> {
+class _MyRegisterState extends State<MyRegister> {
   @override
   void initState() {
     Future.delayed(Duration(seconds: 1), () {
@@ -42,25 +46,36 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CustomTheme.currentTheme.scaffoldBackgroundColor,
       appBar: AppBar(
-        elevation: 0,
+        toolbarHeight: 70,
+        backgroundColor: ColorPallete.vermillion,
         title: Text('Sign Up to Gallery'),
         actions: <Widget>[
-          FlatButton.icon(
-            icon: Icon(
-              Icons.person,
-              color: Colors.black,
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: TextButton.icon(
+              icon: Icon(
+                Icons.person,
+                color: ColorPallete.fullWhite,
+              ),
+              label: Text(
+                'Sign In',
+                style: TextStyle(
+                  color: ColorPallete.fullWhite,
+                ),
+              ),
+              onPressed: () => (isBtnDisabled)
+                  ? null
+                  : Navigator.pushReplacement(
+                      context,
+                      PageTransition(
+                        child: MyLogin(),
+                        type: PageTransitionType.fade,
+                        duration: const Duration(milliseconds: 500),
+                      ),
+                    ),
             ),
-            label: Text(
-              'Sign In',
-              style: TextStyle(color: Colors.black),
-            ),
-            onPressed: () => (isBtnDisabled)
-                ? null
-                : Navigator.pushReplacement(
-                    context,
-                    PageTransition(
-                        child: Login(), type: PageTransitionType.fade)),
           ),
         ],
       ),
@@ -74,11 +89,22 @@ class _RegisterState extends State<Register> {
                 height: 20,
               ),
               TextFormField(
-                //decoration: textInputDecoration.copyWith(hintText: 'username'),
-                decoration: InputDecoration(
-                  hintText: 'Username',
+                style: TextStyle(
+                  color: CustomTheme.getTheme
+                      ? ColorPallete.fullBlack
+                      : ColorPallete.fullWhite,
                 ),
-                validator: (val) => val.isEmpty ? 'Enter a username' : null,
+                decoration: CustomInputDecoration.authDecoration
+                    .copyWith(hintText: 'Username'),
+                validator: (val) {
+                  if (val.isEmpty) {
+                    return 'Field must not be empty.';
+                  }
+                  if (val.length < 3) {
+                    return 'Username must have at least 3 characters.';
+                  }
+                  return null;
+                },
                 onChanged: (val) {
                   setState(() {
                     username = val;
@@ -89,11 +115,22 @@ class _RegisterState extends State<Register> {
                 height: 20,
               ),
               TextFormField(
-                //decoration: textInputDecoration.copyWith(hintText: 'email'),
-                decoration: InputDecoration(
-                  hintText: 'Email',
+                style: TextStyle(
+                  color: CustomTheme.getTheme
+                      ? ColorPallete.fullBlack
+                      : ColorPallete.fullWhite,
                 ),
-                validator: (val) => val.isEmpty ? 'Enter an email' : null,
+                decoration: CustomInputDecoration.authDecoration
+                    .copyWith(hintText: 'Email'),
+                validator: (val) {
+                  if (val.isEmpty) {
+                    return 'Field must not be empty.';
+                  }
+                  if (!EmailValidator.validate(email)) {
+                    return 'Email is not valid.';
+                  }
+                  return null;
+                },
                 onChanged: (val) {
                   setState(() {
                     email = val;
@@ -104,13 +141,22 @@ class _RegisterState extends State<Register> {
                 height: 20,
               ),
               TextFormField(
-                //decoration: textInputDecoration.copyWith(hintText: 'password'),
-                decoration: InputDecoration(
-                  hintText: 'Password',
+                style: TextStyle(
+                  color: CustomTheme.getTheme
+                      ? ColorPallete.fullBlack
+                      : ColorPallete.fullWhite,
                 ),
-                validator: (val) => val.length < 6
-                    ? 'Enter a password longer than 6 characters'
-                    : null,
+                decoration: CustomInputDecoration.authDecoration
+                    .copyWith(hintText: 'Password'),
+                validator: (val) {
+                  if (val.isEmpty) {
+                    return 'Field must not be empty.';
+                  }
+                  if (val.length < 6) {
+                    return 'Password must be longer than 6 characters.';
+                  }
+                  return null;
+                },
                 obscureText: true,
                 onChanged: (val) {
                   setState(() {
@@ -121,29 +167,26 @@ class _RegisterState extends State<Register> {
               SizedBox(
                 height: 20,
               ),
-              RaisedButton(
-                color: Colors.pink[400],
+              TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(ColorPallete.vermillion),
+                  padding: MaterialStateProperty.all<EdgeInsets>(
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                ),
                 onPressed: () async {
                   if (_regFormKey.currentState.validate()) {
-                    /*setState(() {
-                      loading = true;
-                    });*/
                     dynamic result = await _auth.registerWithEmailPassword(
                         email, password, username);
                     Navigator.of(context).pushReplacement(Home.route);
                     if (result == null) {
-                      /*setState(() {
-                        loading = false;
-                        error = 'there was an error';
-                      });*/
+                      error = 'there was an error';
                     }
                   }
                 },
                 child: Text(
                   'Register',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(color: ColorPallete.fullWhite),
                 ),
               ),
             ],

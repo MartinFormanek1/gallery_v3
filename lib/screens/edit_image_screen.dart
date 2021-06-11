@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gallery_v3/components/edit_image_dial.dart';
 import 'package:gallery_v3/providers/my_image_provider.dart';
+import 'package:gallery_v3/styles/colors.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditImageScreen extends StatefulWidget {
@@ -40,13 +41,16 @@ class _EditImageScreenState extends State<EditImageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: ColorPallete.vermillion,
         title: Text((MyImageProvider.instance.image == null)
             ? 'Pick your image'
             : 'Your image'),
         actions: [
           TextButton(
               onPressed: () {
-                setState(() {});
+                setState(() {
+                  print(MyImageProvider.instance.image);
+                });
               },
               child: Text('reset'))
         ],

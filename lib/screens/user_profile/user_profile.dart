@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gallery_v3/screens/home/home.dart';
 
 class MyProfile extends StatefulWidget {
-  static const routeName = '/myGallery';
+  static const routeName = '/myProfile';
   const MyProfile({Key key}) : super(key: key);
   static MaterialPageRoute get route => MaterialPageRoute(
         builder: (context) => const MyProfile(),

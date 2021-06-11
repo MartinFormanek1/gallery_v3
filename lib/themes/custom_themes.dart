@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:gallery_v3/shared/colors.dart';
+import 'package:gallery_v3/styles/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomTheme {
   static bool _isLight = false;
   static bool get getTheme => _isLight;
-  static void set isThemeLight(bool isLight) {
+
+  static void changeTheme() async {
+    _isLight = !_isLight;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('lightTheme', _isLight);
+  }
+
+  static void set onInitApp(bool isLight) {
     _isLight = isLight;
   }
 
@@ -54,5 +62,32 @@ class CustomTheme {
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: ColorPallete.vermillion,
         ));
+  }
+}
+
+class CustomInputDecoration {
+  static InputDecoration get authDecoration {
+    return InputDecoration(
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: ColorPallete.vermillion,
+        ),
+      ),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: ColorPallete.vermillion,
+        ),
+      ),
+      errorStyle: TextStyle(
+        fontSize: 10,
+        color: Colors.red.shade900,
+      ),
+      hintText: 'if you see this text creator fucked up',
+      hintStyle: TextStyle(
+        color: CustomTheme.getTheme
+            ? Colors.grey.shade700
+            : ColorPallete.hintWhite,
+      ),
+    );
   }
 }
