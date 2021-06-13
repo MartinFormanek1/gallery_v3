@@ -1,12 +1,11 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_v3/database/user_register.dart';
 import 'package:gallery_v3/screens/home/home.dart';
 import 'package:gallery_v3/screens/log_reg/login/login.dart';
 import 'package:gallery_v3/styles/colors.dart';
-import 'package:gallery_v3/themes/custom_themes.dart';
+import 'package:gallery_v3/styles/custom_themes.dart';
 import 'package:page_transition/page_transition.dart';
-
-import '../authentication.dart';
 
 class MyRegister extends StatefulWidget {
   final Function toggleView;
@@ -22,11 +21,12 @@ GlobalKey<FormState> _regFormKey =
     GlobalKey<FormState>(debugLabel: '_regFormKey');
 bool isBtnDisabled = true;
 
-final UserAuth _auth = UserAuth();
+final UserRegistration _auth = UserRegistration();
 
 String email = '';
 String emailValid = '';
 String password = '';
+String confPass = '';
 String error = '';
 String username = '';
 
@@ -167,6 +167,33 @@ class _MyRegisterState extends State<MyRegister> {
               SizedBox(
                 height: 20,
               ),
+              TextFormField(
+                style: TextStyle(
+                  color: CustomTheme.getTheme
+                      ? ColorPallete.fullBlack
+                      : ColorPallete.fullWhite,
+                ),
+                decoration: CustomInputDecoration.authDecoration
+                    .copyWith(hintText: 'Confirm Password'),
+                validator: (val) {
+                  if (val.isEmpty) {
+                    return 'Field must not be empty.';
+                  }
+                  if (confPass != password) {
+                    return 'Passwords must match.';
+                  }
+                  return null;
+                },
+                obscureText: true,
+                onChanged: (val) {
+                  setState(() {
+                    confPass = val;
+                  });
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
               TextButton(
                 style: ButtonStyle(
                   backgroundColor:
@@ -178,9 +205,11 @@ class _MyRegisterState extends State<MyRegister> {
                   if (_regFormKey.currentState.validate()) {
                     dynamic result = await _auth.registerWithEmailPassword(
                         email, password, username);
-                    Navigator.of(context).pushReplacement(Home.route);
                     if (result == null) {
                       error = 'there was an error';
+                      print(error);
+                    } else {
+                      Navigator.of(context).pushReplacement(Home.route);
                     }
                   }
                 },

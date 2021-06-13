@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gallery_v3/themes/custom_themes.dart';
+import 'package:gallery_v3/styles/custom_themes.dart';
 
 class MyFirebaseError extends StatelessWidget {
   const MyFirebaseError({Key key}) : super(key: key);

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gallery_v3/database/upload_image.dart';
 import 'package:gallery_v3/providers/my_image_provider.dart';
 import 'package:gallery_v3/providers/my_tags_provider.dart';
 import 'package:gallery_v3/styles/colors.dart';
-import 'package:gallery_v3/themes/custom_themes.dart';
+import 'package:gallery_v3/styles/custom_themes.dart';
 
 class TagsDialog extends StatefulWidget {
   @override
@@ -10,6 +11,8 @@ class TagsDialog extends StatefulWidget {
 }
 
 class _TagsDialogState extends State<TagsDialog> {
+  UploadImage uploadImage = UploadImage();
+
   List<Tag> _tags = Tags.instance.getTags;
 
   List<Tag> _activeTags = MyImageProvider.instance.getSelectedTags == null
@@ -115,7 +118,13 @@ class _TagsDialogState extends State<TagsDialog> {
             child: IconButton(
               color: ColorPallete.vermillion,
               iconSize: 32,
-              onPressed: _activeTags.isEmpty ? null : () {},
+              onPressed: _activeTags.isEmpty
+                  ? null
+                  : () async {
+                      await uploadImage.uploadImage();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
               icon: Icon(Icons.send),
               disabledColor: Colors.grey,
             ),

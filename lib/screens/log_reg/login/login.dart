@@ -1,12 +1,12 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_v3/database/user_login.dart';
+import 'package:gallery_v3/providers/my_user_provider.dart';
 import 'package:gallery_v3/screens/home/home.dart';
 import 'package:gallery_v3/screens/log_reg/register/register.dart';
 import 'package:gallery_v3/styles/colors.dart';
-import 'package:gallery_v3/themes/custom_themes.dart';
+import 'package:gallery_v3/styles/custom_themes.dart';
 import 'package:page_transition/page_transition.dart';
-
-import '../authentication.dart';
 
 class MyLogin extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class _MyLoginState extends State<MyLogin> {
       GlobalKey<FormState>(debugLabel: '_logFormKey');
   bool isBtnDisabled = true;
 
-  final UserAuth _auth = UserAuth();
+  final UserLogin _auth = UserLogin();
 
   String email = '';
   String password = '';
@@ -151,6 +151,7 @@ class _MyLoginState extends State<MyLogin> {
                         error = 'there was an error';
                       });
                     } else {
+                      UserProvider.instance.setUser = result;
                       Navigator.of(context).pushReplacement(Home.route);
                     }
                   }

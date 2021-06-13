@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gallery_v3/styles/colors.dart';
-import 'package:gallery_v3/themes/custom_themes.dart';
+import 'package:gallery_v3/styles/custom_themes.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({Key key, this.scaffoldKey, this.title, this.isBackArrow})

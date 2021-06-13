@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gallery_v3/components/side_menu_button.dart';
-import 'package:gallery_v3/screens/log_reg/authentication.dart';
+import 'package:gallery_v3/database/user_login.dart';
 import 'package:gallery_v3/screens/user_gallery/user_gallery.dart';
 import 'package:gallery_v3/screens/user_profile/user_profile.dart';
 import 'package:gallery_v3/screens/user_saved/user_saved.dart';
 import 'package:gallery_v3/styles/colors.dart';
-import 'package:gallery_v3/themes/custom_themes.dart';
+import 'package:gallery_v3/styles/custom_themes.dart';
 
 class SideSheet extends StatefulWidget {
   @override
@@ -13,7 +13,11 @@ class SideSheet extends StatefulWidget {
 }
 
 class _SideSheetState extends State<SideSheet> {
-  final UserAuth _auth = UserAuth();
+  final UserLogin _auth = UserLogin();
+
+  void signOut() async {
+    await _auth.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +42,7 @@ class _SideSheetState extends State<SideSheet> {
                       SideButton(
                         route: () {
                           setState(() {
-                            _auth.signOut();
+                            signOut();
                           });
                         },
                         icon: Icon(Icons.logout),
@@ -120,18 +124,6 @@ class _SideSheetState extends State<SideSheet> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      /*Align(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: SideButton(
-                            route: () =>
-                                Navigator.of(context).push(MySettings.route),
-                            icon: Icon(Icons.settings),
-                            label: 'Settings',
-                            color: CustomTheme.reverseTextColor,
-                          ),
-                        ),
-                      ),*/
                       IconButton(
                         onPressed: () {
                           setState(() {

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gallery_v3/components/tag_dialog.dart';
 import 'package:gallery_v3/providers/my_image_provider.dart';
 import 'package:gallery_v3/styles/colors.dart';
-import 'package:gallery_v3/themes/custom_themes.dart';
+import 'package:gallery_v3/styles/custom_themes.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UploadImageScreen extends StatefulWidget {

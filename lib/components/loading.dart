@@ -6,8 +6,8 @@ class Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SpinKitPulse(
-      color: ColorPallete.appbarColor,
-      size: 50,
+      color: ColorPallete.vermillion,
+      size: 250,
     );
   }
 }
