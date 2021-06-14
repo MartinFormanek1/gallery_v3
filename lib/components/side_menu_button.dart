@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gallery_v3/styles/custom_themes.dart';
 
 class SideButton extends StatelessWidget {
   const SideButton(
@@ -19,7 +20,10 @@ class SideButton extends StatelessWidget {
         icon: icon,
         onPressed: route,
         label: Text(label),
-        style: TextButton.styleFrom(primary: color),
+        style: TextButton.styleFrom(
+          primary: color,
+          onSurface: CustomTheme.getDisabledColor,
+        ),
       ),
     );
   }

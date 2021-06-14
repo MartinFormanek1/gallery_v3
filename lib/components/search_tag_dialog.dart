@@ -1,25 +1,21 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_v3/database/upload_image.dart';
-import 'package:gallery_v3/providers/my_image_provider.dart';
 import 'package:gallery_v3/providers/my_tags_provider.dart';
 import 'package:gallery_v3/styles/colors.dart';
 import 'package:gallery_v3/styles/custom_themes.dart';
 
-class TagsDialog extends StatefulWidget {
+class SearchTagDialog extends StatefulWidget {
   @override
-  _TagsDialogState createState() => _TagsDialogState();
+  _SearchTagDialogState createState() => _SearchTagDialogState();
 }
 
-class _TagsDialogState extends State<TagsDialog> {
+class _SearchTagDialogState extends State<SearchTagDialog> {
   UploadImage uploadImage = UploadImage();
 
   List<Tag> _tags = Tags.instance.getTags;
 
-  List<Tag> _activeTags = MyImageProvider.instance.getSelectedTags == null
-      ? []
-      : MyImageProvider.instance.getSelectedTags.isEmpty
-          ? []
-          : MyImageProvider.instance.getSelectedTags;
+  List<Tag> _activeTags = [];
 
   @override
   Widget build(BuildContext context) {
@@ -78,13 +74,9 @@ class _TagsDialogState extends State<TagsDialog> {
                             if (!_activeTags.contains(tag)) {
                               _activeTags.add(tag);
                               tag.isSelected = true;
-                              MyImageProvider.instance.setSelectedTags =
-                                  _activeTags;
                             } else {
                               _activeTags.remove(tag);
                               tag.isSelected = false;
-                              MyImageProvider.instance.setSelectedTags =
-                                  _activeTags;
                             }
                           });
                         },
@@ -92,15 +84,12 @@ class _TagsDialogState extends State<TagsDialog> {
                           overlayColor:
                               MaterialStateProperty.all(Colors.transparent),
                         ),
-                        child: FittedBox(
-                          fit: BoxFit.fitWidth,
-                          child: Text(
-                            tag.value,
-                            style: TextStyle(
-                              color: tag.isSelected
-                                  ? ColorPallete.fullWhite
-                                  : CustomTheme.reverseTextColor,
-                            ),
+                        child: Text(
+                          tag.value,
+                          style: TextStyle(
+                            color: tag.isSelected
+                                ? ColorPallete.fullWhite
+                                : CustomTheme.reverseTextColor,
                           ),
                         ),
                       ),
@@ -123,12 +112,16 @@ class _TagsDialogState extends State<TagsDialog> {
               iconSize: 32,
               onPressed: _activeTags.isEmpty
                   ? null
-                  : () async {
-                      await uploadImage.uploadImage();
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
+                  : () {
+                      List<String> _selectedTags = [];
+                      _activeTags.forEach((tag) {
+                        _selectedTags.add(tag.value);
+                        tag.isSelected = false;
+                      });
+                      _activeTags.clear();
+                      Navigator.pop(context, _selectedTags);
                     },
-              icon: Icon(Icons.send),
+              icon: Icon(Icons.search),
               disabledColor: Colors.grey,
             ),
           ),

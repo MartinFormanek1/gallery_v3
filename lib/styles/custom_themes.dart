@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gallery_v3/screens/home/home.dart';
 import 'package:gallery_v3/styles/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -6,10 +7,11 @@ class CustomTheme {
   static bool _isLight = false;
   static bool get getTheme => _isLight;
 
-  static void changeTheme() async {
+  static void changeTheme(BuildContext context) async {
     _isLight = !_isLight;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('lightTheme', _isLight);
+    Navigator.push(context, Home.route);
   }
 
   static set onInitApp(bool isLight) {
@@ -24,8 +26,12 @@ class CustomTheme {
     return getTheme ? darkTheme : lightTheme;
   }
 
+  static Color get getDisabledColor {
+    return getTheme ? ColorPallete.disabledDark : ColorPallete.disabledLight;
+  }
+
   static Color get reverseTextColor {
-    return getTheme ? Colors.black : ColorPallete.fullWhite;
+    return getTheme ? ColorPallete.fullBlack : ColorPallete.fullWhite;
   }
 
   static ThemeData get lightTheme {

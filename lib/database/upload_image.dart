@@ -9,8 +9,7 @@ class UploadImage {
       FirebaseFirestore.instance.collection('images');
 
   Future<void> uploadImage() async {
-    String imgName = MyImageProvider.instance.getImage.path.substring(41, 46) +
-        DateTime.now().millisecondsSinceEpoch.toString();
+    String imgName = DateTime.now().millisecondsSinceEpoch.toString();
 
     Reference ref = storage.ref('images/$imgName');
 
@@ -18,19 +17,20 @@ class UploadImage {
       await ref.putFile(MyImageProvider.instance.getImage);
       String downloadURL =
           await storage.ref('images/$imgName').getDownloadURL();
-      addImage(downloadURL, ref);
+      addImage(downloadURL, ref, imgName);
       MyImageProvider.instance.clearImage();
     } catch (e) {
       print('Error:' + e.toString());
     }
   }
 
-  void addImage(String url, Reference ref) async {
+  void addImage(String url, Reference ref, String imgName) async {
     List<String> tagValues = [];
     MyImageProvider.instance.getSelectedTags
         .forEach((tag) => tagValues.add(tag.value));
     try {
       await images.add({
+        'time': imgName,
         'tags': tagValues,
         'userID': FirebaseAuth.instance.currentUser.uid,
         'url': url,
@@ -39,11 +39,5 @@ class UploadImage {
     } catch (e) {
       print('Error: ' + e.toString());
     }
-
-    /*
-    QuerySnapshot snapshot = await images.get();
-    for (var doc in snapshot.docs) {
-      images.doc(doc.id).collection('likes').doc('fill').set({'fill': 'fill'});
-    }*/
   }
 }

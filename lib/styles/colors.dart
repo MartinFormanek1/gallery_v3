@@ -16,4 +16,8 @@ class ColorPallete {
   static const Color settingsBarBlack = Color(0xFA09797);
   static const Color hintWhite = Color(0xFFB6AFAF);
   static const Color logoOrange = Color(0xFFFE6A4B);
+  static const Color disabledLight = Color(0xFF878787);
+  static const Color disabledDark = Color(0xFFA3A3A3);
+  static const Color silver = Color(0xFFC0C0C0);
+  static const Color dimGray = Color(0xFF6D676E);
 }

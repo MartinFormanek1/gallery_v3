@@ -37,6 +37,8 @@ class UserRegistration {
       'username': username,
       'email': email,
       'uID': uID,
+      'follows': [],
+      'saved': [],
     });
   }
 

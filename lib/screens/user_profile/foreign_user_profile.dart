@@ -1,34 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:gallery_v3/components/like_button.dart';
+import 'package:gallery_v3/components/loading.dart';
 import 'package:gallery_v3/database/database_service.dart';
-import 'package:gallery_v3/screens/error/error.dart';
 import 'package:gallery_v3/styles/colors.dart';
 import 'package:gallery_v3/styles/custom_themes.dart';
 
-import 'like_button.dart';
-import 'loading.dart';
+class ForeignUserScreen extends StatefulWidget {
+  static const routeName = '/foreignUser';
 
-class MainFeed extends StatefulWidget {
-  const MainFeed({Key key}) : super(key: key);
+  ForeignUserScreen(this.username);
 
   @override
-  _MainFeedState createState() => _MainFeedState();
+  _ForeignUserScreenState createState() => _ForeignUserScreenState();
+
+  final username;
 }
 
-class _MainFeedState extends State<MainFeed> {
+class _ForeignUserScreenState extends State<ForeignUserScreen> {
   DatabaseService db = DatabaseService();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> _imageUrls = [];
   List<String> _posters = [];
   List<bool> _isLiked = [];
   String currentUser = '';
 
-  void fillList() async {
-    await db.initData();
-    _posters = await db.getImagePoster();
-    _isLiked = await db.isLikedByCurrentUser();
-    currentUser = await db.getUsername();
-    setState(() {
-      _imageUrls = db.getUrls();
-    });
+  @override
+  void initState() {
+    super.initState();
+    fillList();
   }
 
   load() {
@@ -37,17 +36,33 @@ class _MainFeedState extends State<MainFeed> {
     }
   }
 
+  void fillList() async {
+    await db.initData();
+    _imageUrls = await db.getForeignUrls(widget.username);
+    _isLiked = await db.isForeignLikedByCurrentUser(_imageUrls);
+    currentUser = await db.getUsername();
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(8, 24, 8, 0),
-      child: Center(
-        child: FutureBuilder(
-          future: load(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) return ErrorFirebase();
-            if (_imageUrls.isNotEmpty)
-              return ListView.builder(
+    return Scaffold(
+      backgroundColor: CustomTheme.currentTheme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        leading: const BackButton(),
+        title: Text("${widget.username}'s profile"),
+        backgroundColor: ColorPallete.vermillion,
+      ),
+      body: Container(
+        padding: EdgeInsets.fromLTRB(8, 24, 8, 0),
+        child: Center(
+          child: FutureBuilder(
+            future: load(),
+            builder: (context, snapshot) {
+              if (_imageUrls.isNotEmpty)
+                return ListView.builder(
                   itemCount: _imageUrls.length,
                   itemBuilder: (BuildContext ctx, int index) {
                     return Padding(
@@ -67,15 +82,15 @@ class _MainFeedState extends State<MainFeed> {
                                     margin: EdgeInsets.all(3),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: _posters[index] != currentUser
+                                      color: widget.username != currentUser
                                           ? ColorPallete.vermillion
                                           : ColorPallete.disabledLight,
                                     ),
                                     height: 50,
                                     width: 50,
                                     child: IconButton(
-                                      onPressed: _posters[index] != currentUser
-                                          ? () => db.addFollow(_posters[index])
+                                      onPressed: widget.username != currentUser
+                                          ? () => db.addFollow(widget.username)
                                           : null,
                                       icon: Icon(Icons.person_add),
                                     ),
@@ -88,16 +103,15 @@ class _MainFeedState extends State<MainFeed> {
                                     margin: EdgeInsets.all(3),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: _posters[index] != currentUser
+                                      color: widget.username != currentUser
                                           ? ColorPallete.vermillion
                                           : ColorPallete.disabledLight,
                                     ),
                                     height: 50,
                                     width: 50,
                                     child: IconButton(
-                                      onPressed: _posters[index] != currentUser
-                                          ? () => db.addSaved(_imageUrls[index])
-                                          : null,
+                                      onPressed: () =>
+                                          db.addSaved(_imageUrls[index]),
                                       icon: Icon(Icons.bookmark),
                                     ),
                                   ),
@@ -114,11 +128,11 @@ class _MainFeedState extends State<MainFeed> {
                                   IconFavButton(
                                     addLike: () {
                                       db.addLike(
-                                          _posters[index], _imageUrls[index]);
+                                          widget.username, _imageUrls[index]);
                                     },
                                     pressed: _isLiked[index],
                                   ),
-                                  Text("Posted by ${_posters[index]}"),
+                                  Text("Posted by ${widget.username}"),
                                 ],
                               ),
                             ),
@@ -126,9 +140,11 @@ class _MainFeedState extends State<MainFeed> {
                         ),
                       ),
                     );
-                  });
-            return Loading();
-          },
+                  },
+                );
+              return Loading();
+            },
+          ),
         ),
       ),
     );

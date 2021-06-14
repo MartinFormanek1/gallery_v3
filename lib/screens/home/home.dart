@@ -49,7 +49,7 @@ class _HomeState extends State<Home> {
                 child: UploadImageScreen(), type: PageTransitionType.fade)),
         child: Icon(Icons.add),
       ),
-      endDrawer: SideSheet(),
+      endDrawer: SideSheet(off: ''),
     );
   }
 }

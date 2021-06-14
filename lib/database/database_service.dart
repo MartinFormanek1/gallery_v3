@@ -8,26 +8,16 @@ class DatabaseService {
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
 
+  String currentUser = FirebaseAuth.instance.currentUser.uid.trim() ?? '';
+
   List<Map<String, dynamic>> _data;
   Map<String, bool> imgData = Map();
 
   Future initData() async {
     _data = await fetchImages();
-    //fillImgData();
-  }
-
-  void fillImgData() async {
-    List<String> urls = [];
-    urls = fetchField('url');
-
-    List<bool> liked = [];
-    //urls = getLikesFromPoster();
   }
 
   void addLike(String poster, String url) async {
-    String currentUser = FirebaseAuth.instance.currentUser.uid.trim();
-    String uID = await getUID(poster);
-
     QuerySnapshot snapshot = await images.where('url', isEqualTo: url).get();
     String imageID = '';
     snapshot.docs.forEach((element) => imageID = element.id);
@@ -60,16 +50,49 @@ class DatabaseService {
   }
 
   Future<List<bool>> isLikedByCurrentUser() async {
-    String currentUser = '';
-    if (FirebaseAuth.instance.currentUser != null) {
-      currentUser = FirebaseAuth.instance.currentUser.uid.trim();
-    }
-
     List<List<String>> likes = [];
-    QuerySnapshot snapshot = await images.get();
+    QuerySnapshot snapshot =
+        await images.orderBy('time', descending: true).get();
 
     snapshot.docs.forEach((element) {
       List<dynamic> docData = element.get('likes');
+      List<String> like = [];
+      for (var value in docData) {
+        like.add(value.toString());
+      }
+      likes.add(like);
+    });
+
+    List<bool> contains = [];
+
+    for (var like in likes) {
+      contains.add(_isLiked(currentUser, like));
+    }
+
+    return contains;
+  }
+
+  Future<List<bool>> isForeignLikedByCurrentUser(List<String> urls) async {
+    List<List<String>> likes = [];
+    QuerySnapshot snapshot =
+        await images.orderBy('time', descending: true).get();
+
+    var data = [];
+    snapshot.docs.forEach((element) {
+      data.add(element.data());
+    });
+
+    var filteredData = [];
+    for (var doc in data) {
+      urls.forEach((element) {
+        if (doc['url'] == element) {
+          filteredData.add(doc);
+        }
+      });
+    }
+
+    filteredData.forEach((element) {
+      List<dynamic> docData = element['likes'];
       List<String> like = [];
       for (var value in docData) {
         like.add(value.toString());
@@ -106,10 +129,30 @@ class DatabaseService {
   }
 
   Future fetchImages() async {
-    QuerySnapshot snapshot = await images.get();
+    QuerySnapshot snapshot =
+        await images.orderBy('time', descending: true).get();
     final List<Map<String, dynamic>> data =
         snapshot.docs.map((doc) => doc.data()).toList();
     return data;
+  }
+
+  Future<List<String>> getFilteredUrls() async {
+    QuerySnapshot snapshot = await images
+        .where('userID', isEqualTo: currentUser)
+        .orderBy('time', descending: true)
+        .get();
+    final List<Map<String, dynamic>> data =
+        snapshot.docs.map((doc) => doc.data()).toList();
+
+    List<String> urls = [];
+    if (data != null) {
+      if (data.isNotEmpty) {
+        data.forEach((doc) {
+          urls.add(doc['url']);
+        });
+      }
+    }
+    return urls;
   }
 
   List<String> getUrls() {
@@ -132,16 +175,20 @@ class DatabaseService {
     return usernames;
   }
 
-  Future<List<String>> getUsername() async {
+  Future<List<String>> getUsernames() async {
     QuerySnapshot snapshot = await users.get();
     var userData = snapshot.docs.map((doc) => doc.data()).toList();
 
     List<String> usernames = [];
     userData.forEach((user) => usernames.add(user['username']));
 
-    // usernames = hope hopes kek
-
     return usernames;
+  }
+
+  Future<String> getUsername() async {
+    DocumentSnapshot snapshot = await users.doc(currentUser).get();
+    var username = snapshot.data()['username'];
+    return username;
   }
 
   List<String> fetchField(String field) {
@@ -155,135 +202,136 @@ class DatabaseService {
     }
     return fieldData;
   }
-}
 
-/*Future<bool> getLikes(String poster, String url) async {
-    String currentUser = FirebaseAuth.instance.currentUser.uid.trim();
+  Future<List<String>> getForeignUrls(String username) async {
+    String userID = '';
 
-    QuerySnapshot snapshot = await images.where('url', isEqualTo: url).get();
-    String imageID = '';
-    snapshot.docs.forEach((element) => imageID = element.id);
+    QuerySnapshot userSnapshot =
+        await users.where('username', isEqualTo: username).get();
 
-    List<String> likes = [];
-    DocumentSnapshot likeSnapshot = await images.doc(imageID).get();
-    List<dynamic> docData = likeSnapshot.get('likes');
-    docData.forEach((element) {
-      likes.add(element.toString());
+    userSnapshot.docs.forEach((element) {
+      userID = element.id;
     });
 
-    if (likes != null) {
-      if (likes.isNotEmpty) {
-        for (var user in likes) {
-          if (user.contains(currentUser)) {
-            print('yes');
-            return true;
-          }
-        }
+    QuerySnapshot snapshot = await images
+        .where('userID', isEqualTo: userID)
+        .orderBy('time', descending: true)
+        .get();
+    final List<Map<String, dynamic>> data =
+        snapshot.docs.map((doc) => doc.data()).toList();
+
+    List<String> urls = [];
+    if (data != null) {
+      if (data.isNotEmpty) {
+        data.forEach((doc) {
+          urls.add(doc['url']);
+        });
       }
     }
-
-    print('no');
-    return false;
-
-QuerySnapshot likeSnapshot =
-    await images.doc(imageID).collection('likes').get();
-
-    Map<String, String> likeDocs = Map();
-    likeSnapshot.docs.forEach((element) {
-      likeDocs.addAll({element.id: element.data()['uID']});
-    });
-
-    List<String> likeDocsValues = [];
-    likeDocsValues = likeDocs.values.toList();
-
-    for (var doc in likeDocsValues) {
-      if (doc == currentUser) {
-        return true;
-      }
-    }
-    return false;
-}
-
-void getLikesFromPoster() async {
-    String currentUser = FirebaseAuth.instance.currentUser.uid.trim();
-
-    QuerySnapshot snapshot = await images.get();
-
-    List<String> imgIDS = [];
-    snapshot.docs.forEach((element) => imgIDS.add(element.id));
-
-    Map<String, String> likeDocs = Map();
-    List<bool> currentUserLiked = [];
-
-    for (var img in imgIDS) {
-      QuerySnapshot likeSnapshot =
-          await images.doc(img).collection('likes').get();
-
-      likeSnapshot.docs.forEach((element) {
-        if (element.id != 'fill') {
-          likeDocs.addAll({element.id: element.data()['uID']});
-        } else {
-          likeDocs.addAll({'fill': 'fill'});
-        }
-      });
-    }
-
-    List<String> likeDocsValues = [];
-    likeDocsValues = likeDocs.values.toList();
-
-    for (var doc in likeDocsValues) {
-      if (doc == currentUser) {
-        currentUserLiked.add(true);
-      } else {
-        currentUserLiked.add(false);
-      }
-    }
-
-    print(currentUserLiked);
-    print(currentUser);
-    print(currentUserLiked);
-
-    QuerySnapshot likeSnapshot =
-        await images.doc(imageID).collection('likes').get();
-
-    Map<String, String> likeDocs = Map();
-    likeSnapshot.docs.forEach((element) {
-      likeDocs.addAll({element.id: element.data()['uID']});
-    });
-
-    List<String> likeDocsValues = [];
-    likeDocsValues = likeDocs.values.toList();
-
-    for (var doc in likeDocsValues) {
-      if (doc == currentUser) {
-        return true;
-      }
-    }
-    return false;
+    return urls;
   }
 
-  Future<bool> getLikes(String poster, String url) async {
-    String currentUser = FirebaseAuth.instance.currentUser.uid.trim();
+  void addFollow(String poster) async {
+    String userID = '';
+    QuerySnapshot snapshot =
+        await users.where('username', isEqualTo: poster).get();
 
-    QuerySnapshot snapshot = await images.where('url', isEqualTo: url).get();
-    String imageID = '';
-    snapshot.docs.forEach((element) => imageID = element.id);
-
-    QuerySnapshot likeSnapshot =
-        await images.doc(imageID).collection('likes').get();
-
-    Map<String, String> likeDocs = Map();
-    likeSnapshot.docs.forEach((element) {
-      likeDocs.addAll({element.id: element.data()['uID']});
+    snapshot.docs.forEach((element) {
+      userID = element.id;
     });
 
-    List<String> likeDocsValues = [];
-    likeDocsValues = likeDocs.values.toList();
+    DocumentSnapshot userDoc = await users.doc(currentUser).get();
 
-    for (var doc in likeDocsValues) {
-      if (doc == currentUser) {
-        return true;
+    List<String> follows = [];
+    for (var follow in userDoc['follows']) {
+      follows.add(follow);
+    }
+
+    bool removed = false;
+
+    for (String follow in follows) {
+      if (follow == userID) {
+        follows.remove(follow);
+        removed = true;
+        break;
       }
     }
-    return false;
-  }*/
+    if (!removed) {
+      follows.add(userID);
+    }
+
+    users.doc(currentUser).update({'follows': follows});
+  }
+
+  void addSaved(String imageUrl) async {
+    DocumentSnapshot userDoc = await users.doc(currentUser).get();
+
+    List<String> saved = [];
+    for (var save in userDoc['saved']) {
+      saved.add(save);
+    }
+
+    bool removed = false;
+
+    for (String save in saved) {
+      if (save == imageUrl) {
+        saved.remove(save);
+        removed = true;
+        break;
+      }
+    }
+    if (!removed) {
+      saved.add(imageUrl);
+    }
+
+    print('kek');
+
+    users.doc(currentUser).update({'saved': saved});
+  }
+
+  Future<List<String>> getGalleryUrls() async {
+    DocumentSnapshot snapshot = await users.doc(currentUser).get();
+
+    var data = snapshot.data()['saved'];
+
+    List<String> urls = [];
+    if (data != null) {
+      for (var url in data) {
+        urls.add(url.toString());
+      }
+    }
+
+    return urls;
+  }
+
+  Future<List<String>> getFollowUrls() async {
+    DocumentSnapshot userSnapshot = await users.doc(currentUser).get();
+    QuerySnapshot imgSnapshot =
+        await images.orderBy('time', descending: true).get();
+
+    var userData = userSnapshot['follows'];
+
+    List<String> userFollows = [];
+    if (userData != null) {
+      for (var follow in userData) {
+        userFollows.add(follow.toString());
+      }
+    }
+
+    var imgData = [];
+    if (imgSnapshot != null) {
+      for (var doc in imgSnapshot.docs) {
+        imgData.add(doc.data());
+      }
+    }
+
+    List<String> urls = [];
+
+    urls = imgData
+        .where((element) => userFollows.contains(element['userID']))
+        .map((e) => e['url'].toString())
+        .toList();
+
+    return urls;
+  }
+}

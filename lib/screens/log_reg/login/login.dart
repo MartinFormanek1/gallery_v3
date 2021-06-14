@@ -9,9 +9,14 @@ import 'package:gallery_v3/styles/custom_themes.dart';
 import 'package:page_transition/page_transition.dart';
 
 class MyLogin extends StatefulWidget {
+  const MyLogin({Key key}) : super(key: key);
+  static const routeName = '/myLogin';
+  static MaterialPageRoute get route => MaterialPageRoute(
+        builder: (context) => const MyLogin(),
+      );
+
   @override
   _MyLoginState createState() => _MyLoginState();
-  static const routeName = '/myLogin';
 }
 
 class _MyLoginState extends State<MyLogin> {

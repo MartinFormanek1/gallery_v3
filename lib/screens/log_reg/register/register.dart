@@ -8,12 +8,17 @@ import 'package:gallery_v3/styles/custom_themes.dart';
 import 'package:page_transition/page_transition.dart';
 
 class MyRegister extends StatefulWidget {
+  const MyRegister({Key key, this.toggleView}) : super(key: key);
+
+  static const routeName = '/register';
+  static MaterialPageRoute get route => MaterialPageRoute(
+        builder: (context) => const MyLogin(),
+      );
+
   final Function toggleView;
-  MyRegister({this.toggleView});
 
   @override
   _MyRegisterState createState() => _MyRegisterState();
-  static const routeName = '/register';
 }
 
 //final AuthService _auth = AuthService();

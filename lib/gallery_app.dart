@@ -4,11 +4,12 @@ import 'package:gallery_v3/screens/home/home.dart';
 import 'package:gallery_v3/screens/image_picker/my_image_picker.dart';
 import 'package:gallery_v3/screens/log_reg/login/login.dart';
 import 'package:gallery_v3/screens/log_reg/register/register.dart';
+import 'package:gallery_v3/screens/search_screen.dart';
 import 'package:gallery_v3/screens/upload_image_screen.dart';
 import 'package:gallery_v3/screens/user_follows/user_follows.dart';
 import 'package:gallery_v3/screens/user_gallery/user_gallery.dart';
+import 'package:gallery_v3/screens/user_profile/foreign_user_profile.dart';
 import 'package:gallery_v3/screens/user_profile/user_profile.dart';
-import 'package:gallery_v3/screens/user_saved/user_saved.dart';
 import 'package:gallery_v3/wrapper.dart';
 import 'package:provider/provider.dart';
 
@@ -27,11 +28,14 @@ class _GalleryAppState extends State<GalleryApp> {
       value: _auth.userChanges(),
       child: MaterialApp(routes: {
         Home.routeName: (context) => Home(),
+        ForeignUserScreen.routeName: (context) =>
+            ForeignUserScreen(ModalRoute.of(context).settings.arguments),
+        MySearch.routeName: (context) => MySearch(),
         MyLogin.routeName: (context) => MyLogin(),
         MyRegister.routeName: (context) => MyRegister(),
         MyImagePicker.routeName: (context) => MyImagePicker(),
         MyGallery.routeName: (context) => MyGallery(),
-        MySaved.routeName: (context) => MySaved(),
+        //MySaved.routeName: (context) => MySaved(),
         MyFollows.routeName: (context) => MyFollows(),
         MyProfile.routeName: (context) => MyProfile(),
         UploadImageScreen.routeName: (context) => UploadImageScreen(),

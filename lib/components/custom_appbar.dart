@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gallery_v3/screens/home/home.dart';
 import 'package:gallery_v3/styles/colors.dart';
 import 'package:gallery_v3/styles/custom_themes.dart';
 
@@ -21,7 +22,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ? IconButton(
               icon: Icon(Icons.arrow_back, color: ColorPallete.fullWhite),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).push(Home.route);
               })
           : null,
       backgroundColor: ColorPallete.vermillion,
